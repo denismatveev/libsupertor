@@ -1,0 +1,10 @@
+.ONESHELL: 
+	SHELL=/bin/bash 
+	.SHELLFLAGS = -e
+staticlibs: $(srcdir)/src/or/libtor.a $(srcdir)/src/common/libor.a $(srcdir)/src/tools/libtorrunner.a $(srcdir)/src/trunnel/libor-trunnel.a $(srcdir)/src/trace/libor-trace.a $(srcdir)/src/common/libor-crypto.a $(srcdir)/src/common/libor-event.a $(srcdir)/src/common/libcurve25519_donna.a $(srcdir)/src/common/libor-ctime.a $(srcdir)/src/ext/keccak-tiny/libkeccak-tiny.a $(srcdir)/src/ext/ed25519/donna/libed25519_donna.a $(srcdir)/src/ext/ed25519/ref10/libed25519_ref10.a
+	find $(srcdir)/src \( -path $(srcdir)src/libs -o -path $(srcdir)/src/httptor/ \) -prune -o -print -name '*.a' -exec cp {} $(srcdir)/src/libs/static \; 
+	cd $(srcdir)/src/libs/static;for lib in *.a;do ar x $$lib;done 
+	find -type f -name '*.a' -exec rm -rf {} \; 
+	ar rcs libsupertor.a *.o
+	cd -
+CLEANFILES += $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/libsupertor.a  
