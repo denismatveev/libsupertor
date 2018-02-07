@@ -62,6 +62,8 @@ AC_ARG_ENABLE(cargo-online-mode,
 AC_ARG_ENABLE(restart-debugging,
    AS_HELP_STRING(--enable-restart-debugging, [Build Tor with support for debugging in-process restart. Developers only.]))
 
+AC_ARG_ENABLE(static-libm,
+    AS_HELP_STRING(--enable-static-libm, [link against a static libm library. Requiers --with-libm-dir]))
 if test "x$enable_coverage" != "xyes" -a "x$enable_asserts_in_tests" = "xno" ; then
     AC_MSG_ERROR([Can't disable assertions outside of coverage build])
 fi
@@ -77,6 +79,7 @@ if test "$enable_static_tor" = "yes"; then
   enable_static_libevent="yes";
   enable_static_openssl="yes";
   enable_static_zlib="yes";
+  enable_static_libm="yes";
   CFLAGS="$CFLAGS -static"
 fi
 
@@ -737,13 +740,26 @@ dnl Where do you live, libm?
 
 dnl On some platforms (Haiku/BeOS) the math library is
 dnl part of libroot. In which case don't link against lm
+AC_ARG_WITH(libm-dir,
+        AS_HELP_STRING(--with-libm-dir=PATH),
+  [
+      if test "x$withval" != "xno" && test "x$withval" != "x"; then
+         ALT_m_WITHVAL="$withval"
+      fi
+  ])
+
 TOR_LIB_MATH=""
+
 save_LIBS="$LIBS"
 AC_SEARCH_LIBS(pow, [m], , AC_MSG_ERROR([Could not find pow in libm or libc.]))
-if test "$ac_cv_search_pow" != "none required"; then
-    TOR_LIB_MATH="$ac_cv_search_pow"
-fi
 LIBS="$save_LIBS"
+if test "$enable_static_libm" = "yes";then
+ TOR_LIB_MATH="$withval/libm.a"
+else
+    if test "$ac_cv_search_pow" != "none required"; then
+        TOR_LIB_MATH="$ac_cv_search_pow"
+    fi
+fi
 AC_SUBST(TOR_LIB_MATH)
 
 dnl ------------------------------------------------------

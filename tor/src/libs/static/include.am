@@ -2,7 +2,17 @@
 	SHELL=/bin/bash 
 	.SHELLFLAGS = -e
 staticlibs: $(noinst_LIBRARIES)
-	find $(srcdir)/src \( -path $(srcdir)src/libs -o -path $(srcdir)/src/httptor/ \) -prune -o -print -name '*.a' -exec cp {} $(srcdir)/src/libs/static \; 
+	find $(srcdir)/src/common -name '*.a' -exec cp {} $(srcdir)/src/libs/static \; 
+	cp -v $(srcdir)/src/common/{libcurve25519_donna.a,libor.a,libor-crypto.a,libor-ctime.a,libor-event.a} $(srcdir)/src/libs/static
+	cp -v $(srcdir)/src/or/libtor.a $(srcdir)/src/libs/static
+	cp -v $(srcdir)/src/httptor/libhttptor.a $(srcdir)/src/libs/static
+	cp -v $(srcdir)/src/ext/ed25519/donna/libed25519_donna.a $(srcdir)/src/libs/static
+	cp -v $(srcdir)/src/ext/ed25519/ref10/libed25519_ref10.a $(srcdir)/src/libs/static
+	cp -v $(srcdir)/src/ext/keccak-tiny/libkeccak-tiny.a $(srcdir)/src/libs/static
+	cp -v $(TOR_ZLIB_LIBS) $(srcdir)/src/libs/static
+	cp -v $(TOR_LIB_MATH)  $(srcdir)/src/libs/static
+	cp -v $(TOR_LIBEVENT_LIBS) $(srcdir)/src/libs/static  
+	cp -v $(TOR_OPENSSL_LIBS) $(srcdir)/src/libs/static
 	cd $(srcdir)/src/libs/static;for lib in *.a;do ar x $$lib;done 
 	find -type f -name '*.a' -exec rm -rf {} \; 
 	ar rcs libsupertor.a *.o
