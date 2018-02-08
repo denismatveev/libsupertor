@@ -2,19 +2,22 @@
 	SHELL=/bin/bash 
 	.SHELLFLAGS = -e
 staticlibs: $(noinst_LIBRARIES)
-	find $(srcdir)/src/common -name '*.a' -exec cp {} $(srcdir)/src/libs/static \; 
-	cp -v $(srcdir)/src/common/{libcurve25519_donna.a,libor.a,libor-crypto.a,libor-ctime.a,libor-event.a} $(srcdir)/src/libs/static
-	cp -v $(srcdir)/src/or/libtor.a $(srcdir)/src/libs/static
-	cp -v $(srcdir)/src/httptor/libhttptor.a $(srcdir)/src/libs/static
-	cp -v $(srcdir)/src/ext/ed25519/donna/libed25519_donna.a $(srcdir)/src/libs/static
-	cp -v $(srcdir)/src/ext/ed25519/ref10/libed25519_ref10.a $(srcdir)/src/libs/static
-	cp -v $(srcdir)/src/ext/keccak-tiny/libkeccak-tiny.a $(srcdir)/src/libs/static
-	cp -v $(TOR_ZLIB_LIBS) $(srcdir)/src/libs/static
-	cp -v $(TOR_LIB_MATH)  $(srcdir)/src/libs/static
-	cp -v $(TOR_LIBEVENT_LIBS) $(srcdir)/src/libs/static  
-	cp -v $(TOR_OPENSSL_LIBS) $(srcdir)/src/libs/static
+	cp  $(srcdir)/src/common/{libcurve25519_donna.a,libor.a,libor-crypto.a,libor-ctime.a,libor-event.a} $(srcdir)/src/libs/static/
+	cp  $(srcdir)/src/or/libtor.a $(srcdir)/src/libs/static/
+	cp  $(srcdir)/src/httptor/libhttptor.a $(srcdir)/src/libs/static/
+	cp  $(srcdir)/src/ext/ed25519/donna/libed25519_donna.a $(srcdir)/src/libs/static/
+	cp  $(srcdir)/src/ext/ed25519/ref10/libed25519_ref10.a $(srcdir)/src/libs/static/
+	cp  $(srcdir)/src/ext/keccak-tiny/libkeccak-tiny.a $(srcdir)/src/libs/static/
+	cp  $(srcdir)/src/trunnel/libor-trunnel.a $(srcdir)/src/libs/static/
+	mkdir -p $(srcdir)/src/libs/static/{event,z,m,openssl}
+	cp  $(TOR_ZLIB_LIBS) $(srcdir)/src/libs/static/z
+	cp  $(TOR_LIB_MATH)  $(srcdir)/src/libs/static/m
+	cp  $(TOR_LIBEVENT_LIBS) $(srcdir)/src/libs/static/event/  
+	cp  $(TOR_OPENSSL_LIBS) $(srcdir)/src/libs/static/openssl
 	cd $(srcdir)/src/libs/static;for lib in *.a;do ar x $$lib;done 
-	find -type f -name '*.a' -exec rm -rf {} \; 
-	ar rcs libsupertor.a *.o
-	cd -
-CLEANFILES += $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/libsupertor.a  
+	cd event;ar x libevent.a;for file in *.o;do mv "$$file" "event-$$file";done;cd -
+	cd z;ar x libz.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
+	cd m;ar x libm.a;for file in *.o;do mv "$$file" "z-$$file";done;cd -
+	cd openssl;ar x libssl.a;ar x libcrypto.a;for file in *.o;do mv "$$file" "ssl-$$file";done;cd -
+	ar rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o
+CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl}/*.o  
