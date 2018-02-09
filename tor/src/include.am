@@ -9,5 +9,5 @@ include src/win32/include.am
 include src/config/include.am
 include src/test/fuzz/include.am
 include src/trace/include.am
-include src/httptor/include.am
+include src/proxytor/include.am
 include src/libs/static/include.am

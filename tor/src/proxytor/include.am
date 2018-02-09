@@ -1,0 +1,6 @@
+noinst_LIBRARIES += \
+      src/proxytor/libproxytor.a
+
+src_proxytor_libproxytor_a_SOURCES = \
+        src/proxytor/proxytor.c
+AM_CPPFLAGS += -I$(srcdir)/src/proxytor
