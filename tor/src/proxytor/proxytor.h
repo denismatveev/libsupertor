@@ -1,12 +1,12 @@
 #ifndef MYAPP_H
 #define MYAPP_H
 #include "tor_api.h"
-
-
-int torstart(tor_main_configuration_t*);
-int torstop(tor_main_configuration_t *);
-int torget(char*); //sends get request
-int torpost(char *);//sends post request
+void* tor_thread_start(void*);
+//int torstart(tor_main_configuration_t*);
+int torstart(void);
+int torstop(void);
+//int torget(char*); //sends get request
+//int torpost(char *);//sends post request
 
 
 
