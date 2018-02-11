@@ -3,4 +3,4 @@ noinst_LIBRARIES += \
 
 src_proxytor_libproxytor_a_SOURCES = \
         src/proxytor/proxytor.c
-AM_CPPFLAGS += -I$(srcdir)/src/proxytor
+AM_CPPFLAGS += -I$(srcdir)/src/proxytor -I$(srcdir)/src/or/
