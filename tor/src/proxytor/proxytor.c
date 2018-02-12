@@ -19,9 +19,9 @@ int torstart(void)
     pthread_attr_t attr;
     if((rc=pthread_attr_init(&attr)))
         return rc;
-fclose(stdout);
-fclose(stdin);
-fclose(stderr);
+//fclose(stdout);
+//fclose(stdin);
+//fclose(stderr);
     if((rc=pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED)))
         return rc;
      if((rc=pthread_create(&tid, &attr, tor_thread_start, NULL)))
@@ -39,21 +39,96 @@ int torstop(void)
     if((rc=pthread_cancel(tid)))
         return rc;
 
-
     return 0;
 }
 
-int torget(char* req)
+
+
+string* init_string(void)
+{
+  string *s;
+  if((s = (string*)malloc(sizeof(string))) == NULL)
+  {
+      fprintf(stderr, "malloc failed\n");
+      return NULL;
+  }
+
+
+  s->ptr = (char*)malloc(sizeof(char));
+  s->len = 0;
+  if (s->ptr == NULL)
+  {
+    fprintf(stderr, "malloc() failed\n");
+    return NULL;
+  }
+
+  s->ptr[0] = '\0';
+
+  return s;
+
+}
+
+void destroy_string(string *s)
+{
+    free(s->ptr);
+    free(s);
+
+    return;
+
+}
+
+string* resize_string(string *s, size_t newsize)
+{
+    char* newstr;
+
+    if((newstr=(char*)realloc(s->ptr,newsize*sizeof(char))) == NULL)
+    {
+        fprintf(stderr,"realloc failed\n");
+        return NULL;
+
+    }
+    memcpy(s->ptr, newstr, s->len);
+    newstr[s->len+1]=0; 
+    s->ptr=newstr;
+    s->len=newsize;
+
+    return s;
+}
+// callback function prototype
+// size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata);
+size_t writefunc(void *ptr, size_t size, size_t nmemb, string *s)
+{
+    size_t newsize = size*nmemb;
+    if((resize_string(s, newsize)) == NULL)
+        return -1;
+
+    memcpy(s->ptr, ptr, newsize);
+    s->len=newsize;
+
+    s->ptr[newsize++]=0;
+  
+  return newsize;
+}
+
+
+int torget(string *res, const char* req)
 {
 
 CURL *curl = curl_easy_init();
 CURLcode ret;
+string *s;
+
 
 if(curl)
  {
+ 
+      if((s=init_string()) == NULL)
+          return -1;
+
+      res = s;
 
   if((ret = curl_easy_setopt(curl, CURLOPT_URL, req)))
-          return ret;
+      return ret;
 
   if((ret=curl_easy_setopt(curl, CURLOPT_PROXY, "socks5://127.0.0.1")))
       return ret;
@@ -63,18 +138,25 @@ if(curl)
   if((ret=curl_easy_setopt(curl, CURLOPT_USERAGENT, "libsupertor/1.0")))
       return ret;
 
+ if((ret=curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc)))
+    return ret;
+
+ if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, res)))
+    return ret;
+
   if((ret = curl_easy_perform(curl)))
       return ret;
   
   curl_easy_cleanup(curl);
 }
+
 return 0;
 
 }
 
 /*
 
-int torpost(char* req)
+int torpost(const char* req)
 {
 	CURL *curl;
   CURLcode res;
