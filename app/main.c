@@ -5,19 +5,20 @@
 int main(int argc, char ** argv)
 {
 int a;
-string *s;
+string *s=init_string();
 if((a = torstart()))
     return a;
-sleep(10); //wait while tor is being initialized
+sleep(3); //wait while tor is being initialized
 
 torget(s,"http://ya.ru");
-fprintf(stdout,"%s",s->ptr);
+printf("Len:%lu\n", s->len);
+printf("Output:%s\n",s->ptr);
 
  if((a=torstop()))
      return a;
-sleep(1);
 destroy_string(s);
-    return 0;
+printf("String destroyed\nn");
+return 0;
 
 
 
