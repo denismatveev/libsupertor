@@ -6,18 +6,19 @@ int main(int argc, char ** argv)
 {
 int a;
 string *s=init_string();
-if((a = torstart()))
-    return a;
-sleep(3); //wait while tor is being initialized
+torstart();
+sleep(10); //wait while tor is being initialized
 
-torget(s,"http://ya.ru");
-printf("Len:%lu\n", s->len);
-printf("Output:%s\n",s->ptr);
-
- if((a=torstop()))
-     return a;
+torget(s,"https://66.ru");
+//sleep(15);
+printf("%s\n",s->ptr);
+printf("Size:%lu\n",s->len);
+//torget(s, "http://psyco2l2lrdxfnee.onion/");
+//sleep(15);
+//printf("%s\n",s->ptr);
+//printf("Size:%lu\n",s->len);
+torstop();
 destroy_string(s);
-printf("String destroyed\nn");
 return 0;
 
 

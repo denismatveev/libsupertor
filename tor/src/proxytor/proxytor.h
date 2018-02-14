@@ -12,8 +12,7 @@ typedef struct _string {
 } string ;
 string* init_string(void);
 void destroy_string(string*);
-string* resize_string(string*, size_t);
-size_t writefunc(void*, size_t, size_t, string*);
+size_t writefunc(char*, size_t, size_t, void*);
 
 void* tor_thread_start(void*);
 int torstart(void);

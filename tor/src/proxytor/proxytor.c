@@ -19,9 +19,9 @@ int torstart(void)
     pthread_attr_t attr;
     if((rc=pthread_attr_init(&attr)))
         return rc;
-//    fclose(stdout);
-//    fclose(stdin);
-//    fclose(stderr);
+    //fclose(stdout);
+    //fclose(stdin);
+    //fclose(stderr);
     if((rc=pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED)))
         return rc;
      if((rc=pthread_create(&tid, &attr, tor_thread_start, NULL)))
@@ -77,38 +77,29 @@ void destroy_string(string *s)
 
 }
 
-string* resize_string(string *s, size_t newsize)
-{
-    char* newstr;
-    printf("Resize_string func()\n");
-    if((newstr=(char*)realloc(s->ptr,newsize*sizeof(char))) == NULL)
-    {
-        fprintf(stderr,"realloc failed\n");
-        return NULL;
-
-    }
-    memcpy(s->ptr, newstr, s->len);
-    newstr[s->len+1]=0; 
-    s->ptr=newstr;
-    s->len=newsize;
-
-    return s;
-}
 // callback function prototype
 // size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata);
-size_t writefunc(void *ptr, size_t size, size_t nmemb, string *s)
+size_t writefunc(char *ptr, size_t size, size_t nmemb, void *st)
 {
+ 
+  size_t realsize = size * nmemb;
+  string *s=(string*)st;
+  char* newptr;
 
-    size_t newsize = size*nmemb;
-    printf("New size is:%lu\n",newsize);
-    if((resize_string(s, newsize+1)) == NULL)
-        return -1;
-    memcpy(s->ptr, ptr, newsize);
-    s->len=newsize;
+  newptr =(char*)realloc(s->ptr,(s->len + nmemb + 1)*sizeof(char));
+  if(newptr == NULL) 
+  {
+    /* out of memory! */
+    printf("not enough memory (realloc returned NULL)\n");
+    return 0;
+  }
+  s->ptr=newptr;
 
-    //s->ptr[newsize+1]=0;
-  
-  return newsize;
+  memcpy(&(s->ptr[s->len]), ptr, realsize);
+  s->len += nmemb;
+  s->ptr[s->len] = 0;
+
+  return realsize;
 }
 
 
@@ -132,11 +123,9 @@ if(curl)
       return ret;
   if((ret=curl_easy_setopt(curl, CURLOPT_USERAGENT, "libsupertor/1.0")))
       return ret;
-
  if((ret=curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc)))
     return ret;
-
- if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, res)))
+ if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)res)))
     return ret;
 
   if((ret = curl_easy_perform(curl)))
