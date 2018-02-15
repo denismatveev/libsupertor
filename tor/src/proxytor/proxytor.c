@@ -3,12 +3,14 @@
 #include "tor_api.h"
 #include <stdlib.h>
 #include <stdio.h>
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 static pthread_t tid;
 static tor_main_configuration_t *cfg;
 void* tor_thread_start(void* arg)
 {
     char *options[]={"tor", "--quiet"};
-    tor_main(1, options);
+    tor_main(2, options);
     return NULL;
 
 }
@@ -20,7 +22,7 @@ int torstart(void)
         return rc;
     if((rc=pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED)))
         return rc;
-     if((rc=pthread_create(&tid, &attr, tor_thread_start, NULL)))
+    if((rc=pthread_create(&tid, &attr, tor_thread_start, NULL)))
          return rc;
 
 
@@ -100,7 +102,7 @@ size_t writefunc(char *ptr, size_t size, size_t nmemb, void *st)
 
 int torget(string *res, const char* req)
 {
-
+unsigned int i = 0;
 CURL *curl = curl_easy_init();
 CURLcode ret;
 
@@ -123,8 +125,11 @@ if(curl)
  if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)res)))
     return ret;
 
-  if((ret = curl_easy_perform(curl)))
-      return ret;
+ do
+ {
+  ret = curl_easy_perform(curl);
+ }
+ while(ret != 0 && i < 10);
   
   curl_easy_cleanup(curl);
 }

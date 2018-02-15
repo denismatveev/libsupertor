@@ -4,19 +4,19 @@
 #include <unistd.h>
 int main(int argc, char ** argv)
 {
-int a;
 string *s=init_string();
-torstart();
-sleep(10); //wait while tor is being initialized
+if(torstart())
+    return 1;
 
-torget(s,"https://66.ru");
-//sleep(15);
+if(torget(s,"https://66.ru"))
+   return 2;
 printf("%s\n",s->ptr);
 //torget(s, "http://psyco2l2lrdxfnee.onion/");
 //sleep(15);
 //printf("%s\n",s->ptr);
 //printf("Size:%lu\n",s->len);
-torstop();
+if(torstop())
+    return 3;
 destroy_string(s);
 return 0;
 
