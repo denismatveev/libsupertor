@@ -21,7 +21,7 @@ $ ./autogen.sh &&  ./configure --enable-static-tor --with-libevent-dir=/usr/lib/
 ````
 ## link app ##
  ````bash
- gcc -static main.c -L. -lsupertor -I../mytor/src/proxytor \ 
+ $ gcc -static main.c -L. -lsupertor -I../mytor/src/proxytor \ 
  									-I../mytor/src/or/  \
 									-lpthread -ldl  \
 									-L../curl/lib/.libs/ \
@@ -44,3 +44,7 @@ $ gcc -static main.c -L. -lsupertor -o app
 If run configure with `--enable-static-tor` four system libs will make as static
 
 If specify `--enable-static-libm` configure will search math library in system paths, and if addictionally specify `--with-libm-dir=PATH` configure script will search lib in PATH
+## How to compile libcurl ##
+````bash
+$ ./configure --disable-rt --disable-ftp --disable-ldap --disable-ldaps --disable-rtsp --disable-dict --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-smb --disable-smtp --disable-gopher --disable-sspi --disable-ntlm-wb --disable-tls-srp --without-zlib --disable-threaded-resolver --disable-file
+````
