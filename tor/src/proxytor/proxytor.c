@@ -7,9 +7,8 @@ static pthread_t tid;
 static tor_main_configuration_t *cfg;
 void* tor_thread_start(void* arg)
 {
-    cfg = tor_main_configuration_new();
-    tor_run_main(cfg);
-    
+    char *options[]={"tor", "--quiet"};
+    tor_main(1, options);
     return NULL;
 
 }
@@ -19,9 +18,6 @@ int torstart(void)
     pthread_attr_t attr;
     if((rc=pthread_attr_init(&attr)))
         return rc;
-    //fclose(stdout);
-    //fclose(stdin);
-    //fclose(stderr);
     if((rc=pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED)))
         return rc;
      if((rc=pthread_create(&tid, &attr, tor_thread_start, NULL)))
@@ -35,7 +31,6 @@ int torstart(void)
 int torstop(void)
 {
     int rc;
-    tor_main_configuration_free(cfg);
     if((rc=pthread_cancel(tid)))
         return rc;
 
