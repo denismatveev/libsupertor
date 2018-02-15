@@ -20,7 +20,7 @@ $ ./autogen.sh &&  ./configure --enable-static-tor --with-libevent-dir=/usr/lib/
 								--enable-static-libm
 ````
 ## link app ##
- ````bash
+````bash
  $ gcc -static main.c -L. -lsupertor -I../mytor/src/proxytor \ 
  									-I../mytor/src/or/  \
 									-lpthread -ldl  \
