@@ -27,7 +27,7 @@ $ ./autogen.sh &&  ./configure --enable-static-tor --with-libevent-dir=/usr/lib/
 									-L../curl/lib/.libs/ \
 									-l:libcurl.a \
 									-lsupertor -lpthread -o app
- ````
+````
 
 ## How to link an application ##
 
