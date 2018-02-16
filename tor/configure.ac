@@ -64,6 +64,8 @@ AC_ARG_ENABLE(restart-debugging,
 
 AC_ARG_ENABLE(static-libm,
     AS_HELP_STRING(--enable-static-libm, [link against a static libm library. Requiers --with-libm-dir]))
+AC_ARG_ENABLE(static-libcurl,
+    AS_HELP_STRING(--enable-static-libcurl, [link against a static libcurl library. Requiers --with-libcurl-dir]))
 if test "x$enable_coverage" != "xyes" -a "x$enable_asserts_in_tests" = "xno" ; then
     AC_MSG_ERROR([Can't disable assertions outside of coverage build])
 fi
@@ -80,6 +82,7 @@ if test "$enable_static_tor" = "yes"; then
   enable_static_openssl="yes";
   enable_static_zlib="yes";
   enable_static_libm="yes";
+  enable_static_libcurl="yes";
   CFLAGS="$CFLAGS -static"
 fi
 
@@ -761,6 +764,26 @@ else
     fi
 fi
 AC_SUBST(TOR_LIB_MATH)
+
+dnl------------------------------------------------------
+dnl Where do you live, libcurl? And how do we call you?
+
+AC_ARG_WITH(libcurl-dir,
+        AS_HELP_STRING(--with-libcurl-dir=PATH),
+  [
+      if test "x$withval" != "xno" && test "x$withval" != "x"; then
+         ALT_curl_WITHVAL="$withval"
+      fi
+  ],
+[
+     if test "$enable_static_libcurl" = "yes";then
+        AC_MSG_ERROR([You must specify an explicit --with-libcurl-dir=x option when using --enable-static-libcurl.])
+     fi
+])
+TOR_LIB_CURL="$withval/libcurl.a"
+AC_SUBST(TOR_LIB_CURL)
+
+
 
 dnl ------------------------------------------------------
 dnl Where do you live, openssl?  And how do we call you?
