@@ -12,12 +12,12 @@ $ make -j4 staticlibs
 ## OR ##
 
 ````bash
-$ ./autogen.sh &&  ./configure --enable-static-tor --with-libevent-dir=/usr/lib/x86_64-linux-gnu \
-								--enable-static-openssl \
-								--with-openssl-dir=/usr/lib/x86_64-linux-gnu/ \
-								--with-zlib-dir=/usr/lib/x86_64-linux-gnu \
-								--disable-asciidoc \
-								--enable-static-libm
+			
+$ ./autogen.sh && ./configure --enable-static-tor --with-libevent-dir=/usr/lib/x86_64-linux-gnu \
+							--enable-static-openssl --with-openssl-dir=/usr/lib/x86_64-linux-gnu \
+							--with-zlib-dir=/usr/lib/x86_64-linux-gnu --disable-asciidoc \
+							--enable-static-libm --enable-static-libcurl \
+							--with-libcurl-dir=/home/dmat/projects/curl-7.58.0/lib/.libs
 ````
 ## link app ##
 ````bash
@@ -37,6 +37,7 @@ $ gcc main.c -I. -L. -ltor -lor -lor-event -lor-crypto -levent -lpthread -lor-ct
 ## Or just using libsupertor ##
 ````bash
 $ gcc -static main.c -L. -lsupertor -o app
+$ gcc -static main.c -L. -lsupertor -I../mytor/src/proxytor  -I../mytor/src/or/  -lpthread -ldl  -lsupertor -lpthread -o app
 ````
 
 # Features: #
