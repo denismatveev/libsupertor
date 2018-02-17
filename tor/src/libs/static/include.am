@@ -9,17 +9,21 @@ staticlibs: $(noinst_LIBRARIES)
 	cp  $(srcdir)/src/ext/ed25519/ref10/libed25519_ref10.a $(srcdir)/src/libs/static/
 	cp  $(srcdir)/src/ext/keccak-tiny/libkeccak-tiny.a $(srcdir)/src/libs/static/
 	cp  $(srcdir)/src/trunnel/libor-trunnel.a $(srcdir)/src/libs/static/
-	mkdir -p $(srcdir)/src/libs/static/{event,z,m,openssl,curl}
+	mkdir -p $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl}
 	cp  $(TOR_ZLIB_LIBS) $(srcdir)/src/libs/static/z
 	cp  $(TOR_LIB_MATH)  $(srcdir)/src/libs/static/m
 	cp  $(TOR_LIBEVENT_LIBS) $(srcdir)/src/libs/static/event/  
 	cp  $(TOR_OPENSSL_LIBS) $(srcdir)/src/libs/static/openssl
 	cp  $(TOR_LIB_CURL) $(srcdir)/src/libs/static/curl
+	cp  $(TOR_LIB_THREAD) $(srcdir)/src/libs/static/pthread
+	cp  $(TOR_LIB_DL) $(srcdir)/src/libs/static/dl
 	cd $(srcdir)/src/libs/static;for lib in *.a;do ar x $$lib;done 
 	cd event;ar x libevent.a;for file in *.o;do mv "$$file" "event-$$file";done;cd -
 	cd z;ar x libz.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
 	cd m;ar x libm.a;for file in *.o;do mv "$$file" "z-$$file";done;cd -
 	cd curl;ar x libcurl.a;for file in *.o;do mv "$$file" "curl-$$file";done;cd -
+	cd pthread;ar x libpthread.a;for file in *.o;do mv "$$file" "pthread-$$file";done;cd -
+	cd dl;ar x libdl.a;for file in *.o;do mv "$$file" "dl-$$file";done;cd -
 	cd openssl;ar x libssl.a;ar x libcrypto.a;for file in *.o;do mv "$$file" "ssl-$$file";done;cd -
-	ar rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o
-CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl,curl}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl,curl}/*.o  
+	ar rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o
+CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl}/*.o  

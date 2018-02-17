@@ -66,6 +66,10 @@ AC_ARG_ENABLE(static-libm,
     AS_HELP_STRING(--enable-static-libm, [link against a static libm library. Requiers --with-libm-dir]))
 AC_ARG_ENABLE(static-libcurl,
     AS_HELP_STRING(--enable-static-libcurl, [link against a static libcurl library. Requiers --with-libcurl-dir]))
+AC_ARG_ENABLE(static-libpthread,
+    AS_HELP_STRING(--enable-static-libpthread, [link against a static libpthread library. Requiers --with-libpthread-dir]))
+AC_ARG_ENABLE(static-libdl,
+    AS_HELP_STRING(--enable-static-libdl, [link against a static libdl library. Requiers --with-libdl-dir]))
 if test "x$enable_coverage" != "xyes" -a "x$enable_asserts_in_tests" = "xno" ; then
     AC_MSG_ERROR([Can't disable assertions outside of coverage build])
 fi
@@ -83,6 +87,8 @@ if test "$enable_static_tor" = "yes"; then
   enable_static_zlib="yes";
   enable_static_libm="yes";
   enable_static_libcurl="yes";
+  enable_static_libpthread="yes";
+  enable_static_libdl="yes";
   CFLAGS="$CFLAGS -static"
 fi
 
@@ -764,6 +770,44 @@ else
     fi
 fi
 AC_SUBST(TOR_LIB_MATH)
+dnl ------------------------------------------------------
+dnl Where do you live,libpthread?
+
+AC_ARG_WITH(libpthread-dir,
+        AS_HELP_STRING(--with-libpthread-dir=PATH),
+  [
+      if test "x$withval" != "xno" && test "x$withval" != "x"; then
+         ALT_pthread_WITHVAL="$withval"
+      fi
+  ],
+[
+     if test "$enable_static_libpthread" = "yes";then
+        AC_MSG_ERROR([You must specify an explicit --with-libpthread-dir=x option when using --enable-static-libpthread.])
+     fi
+])
+TOR_LIB_THREAD="$withval/libpthread.a"
+AC_SUBST(TOR_LIB_THREAD)
+
+dnl ------------------------------------------------------
+dnl Where do you live,libdl?
+
+AC_ARG_WITH(libdl-dir,
+        AS_HELP_STRING(--with-libdl-dir=PATH),
+  [
+      if test "x$withval" != "xno" && test "x$withval" != "x"; then
+         ALT_dl_WITHVAL="$withval"
+      fi
+  ],
+[
+     if test "$enable_static_libdl" = "yes";then
+        AC_MSG_ERROR([You must specify an explicit --with-libdl-dir=x option when using --enable-static-libdl.])
+     fi
+])
+TOR_LIB_DL="$withval/libdl.a"
+AC_SUBST(TOR_LIB_DL)
+
+
+
 
 dnl------------------------------------------------------
 dnl Where do you live, libcurl? And how do we call you?
