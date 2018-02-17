@@ -102,7 +102,6 @@ size_t writefunc(char *ptr, size_t size, size_t nmemb, void *st)
 
 int torget(string *res, const char* req)
 {
-unsigned int i = 0;
 CURL *curl = curl_easy_init();
 CURLcode ret;
 
@@ -121,14 +120,15 @@ if(curl)
     return ret;
  if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)res)))
     return ret;
-
+ if((ret=curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20L)))
+     return ret;
  do
  {
   ret = curl_easy_perform(curl);
  }
- while(ret != 0 && i < 10);
-  
-  curl_easy_cleanup(curl);
+ while(ret != 0);
+
+ curl_easy_cleanup(curl);
 }
 
 return 0;
@@ -136,21 +136,37 @@ return 0;
 }
 
 
-int torpost(const char* url, const char* post)
+
+
+
+
+
+int torpost(string *repl, const char* url, const char *post)
 {
   CURL *curl;
-  CURLcode res;
+  CURLcode ret;
+
  
   curl = curl_easy_init();
   if(curl) 
   {
-    curl_easy_setopt(curl, CURLOPT_URL, url);
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post);
- 
-    res = curl_easy_perform(curl);
-    if(res != CURLE_OK)
-      return res; 
-    curl_easy_cleanup(curl);
+    if((ret=curl_easy_setopt(curl, CURLOPT_PROXY, "socks5h://127.0.0.1:9050")))
+       return ret;
+    if((curl_easy_setopt(curl, CURLOPT_URL, url)))
+        return ret;
+    if((curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post)))
+        return ret;
+    if((ret=curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc)))
+         return ret;
+    if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)repl)))
+          return ret;
+ do
+ {
+   ret = curl_easy_perform(curl);
+ }
+ while(ret != 0);
+
+ curl_easy_cleanup(curl);
   }
   return 0;
 }

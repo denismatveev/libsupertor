@@ -18,5 +18,5 @@ void* tor_thread_start(void*);
 int torstart(void);
 int torstop(void);
 int torget(string *s,const char*); //sends get request
-int torpost(const char *, const char *);//sends post request
+int torpost(string *repl, const char *, const char *);//sends post request
 #endif
