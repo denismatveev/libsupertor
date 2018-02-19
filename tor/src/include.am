@@ -10,4 +10,9 @@ include src/config/include.am
 include src/test/fuzz/include.am
 include src/trace/include.am
 include src/proxytor/include.am
+if STATIC
 include src/libs/static/include.am
+endif
+if SHARED
+include src/libs/shared/include.am
+endif

@@ -31,6 +31,8 @@ fi
 # the += operator on it in src/or/Makefile.am
 CPPFLAGS="$CPPFLAGS -I\${top_srcdir}/src/common"
 
+AC_ARG_ENABLE(shared-libs,
+   AS_HELP_STRING(--enable-shared-libs, [Create shared libraries.]))
 AC_ARG_ENABLE(openbsd-malloc,
    AS_HELP_STRING(--enable-openbsd-malloc, [use malloc code from OpenBSD.  Linux only]))
 AC_ARG_ENABLE(static-openssl,
@@ -91,7 +93,14 @@ if test "$enable_static_tor" = "yes"; then
   enable_static_libdl="yes";
   CFLAGS="$CFLAGS -static"
 fi
-
+if test "x$enable_static_tor" = "xyes" && test "x$enable_shared_libs" = "xyes";then
+     AC_MSG_ERROR([You can't use both --enable-static-tor and --enable-shared-libs at the same timea])
+fi
+if test "x$enable_shared_libs" = "xyes";then
+    CFLAGS="$CFLAGS -fPIC"
+fi
+AM_CONDITIONAL(SHARED,  test "x$enable_shared_libs" = "xyes")
+AM_CONDITIONAL(STATIC, test "x$enable_static_tor" = "xyes")
 if test "$enable_system_torrc" = "no"; then
   AC_DEFINE(DISABLE_SYSTEM_TORRC, 1,
             [Defined if we're not going to look for a torrc in SYSCONF])
@@ -1089,7 +1098,7 @@ m4_ifdef([AS_VAR_IF],[
     AS_VAR_POPDEF([can_compile])
     TOR_CHECK_CFLAGS(-Wstack-protector)
     TOR_CHECK_CFLAGS(--param ssp-buffer-size=1)
-    if test "$bwin32" = "false" && test "$enable_libfuzzer" != "yes" && test "$enable_oss_fuzz" != "yes"; then
+    if test "$bwin32" = "false" && test "$enable_libfuzzer" != "yes" && test "$enable_oss_fuzz" != "yes" && test "$enable_shared_libs" != "yes"; then
        TOR_CHECK_CFLAGS(-fPIE)
        TOR_CHECK_LDFLAGS(-pie, "$all_ldflags_for_check", "$all_libs_for_check")
     fi
