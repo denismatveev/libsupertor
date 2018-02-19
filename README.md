@@ -45,5 +45,5 @@ shared lib libsupertor.so located at src/lib/shared/
 $ gcc -g main.c -lsupertor -L. -I../mytor/src/proxytor -L../curl-7.58.0/lib/.libs/ -lcurl -levent  -lz -lm -lpthread -o app
 ````
 Also you need custom build of openssl, see above.
-To run the app specify export LD_LIBRARY_PATH=`pwd`
+To run the app specify export LD_LIBRARY_PATH=``pwd``
 
