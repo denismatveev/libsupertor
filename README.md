@@ -49,4 +49,4 @@ To run the app specify export LD_LIBRARY_PATH=`` `pwd` ``
 
 ## How to cross-compile ##
 # curl cross-compile #
-https://curl.haxx.se/docs/install.html[https://curl.haxx.se/docs/install.html](https://curl.haxx.se/docs/install.html)
+https://curl.haxx.se/docs/install.html
