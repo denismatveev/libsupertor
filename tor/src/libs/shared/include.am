@@ -9,7 +9,7 @@ sharedlibs: $(noinst_LIBRARIES)
 	cp  $(srcdir)/src/ext/ed25519/ref10/libed25519_ref10.a $(srcdir)/src/libs/shared/
 	cp  $(srcdir)/src/ext/keccak-tiny/libkeccak-tiny.a $(srcdir)/src/libs/shared/
 	cp  $(srcdir)/src/trunnel/libor-trunnel.a $(srcdir)/src/libs/shared/
-	cd $(srcdir)/src/libs/shared;for lib in *.a;do ar x $$lib;done;cd -
+	cd $(srcdir)/src/libs/shared;for lib in *.a;do $(AR) x $$lib;done;cd -
 	cd $(srcdir)/src/libs/shared;$(CC) -fPIC -shared -o libsupertor.so *.o 
 
 CLEANFILES +=$(srcdir)/src/libs/shared/*.so $(srcdir)/src/libs/shared/*.o  $(srcdir)/src/libs/shared/*.a 
