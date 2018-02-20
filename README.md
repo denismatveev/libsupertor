@@ -47,3 +47,6 @@ $ gcc -g main.c -lsupertor -L. -I../mytor/src/proxytor -L../curl-7.58.0/lib/.lib
 Also you need custom build of openssl, see above.
 To run the app specify export LD_LIBRARY_PATH=`` `pwd` ``
 
+## How to cross-compile ##
+# curl cross-compile #
+https://curl.haxx.se/docs/install.html[https://curl.haxx.se/docs/install.html](https://curl.haxx.se/docs/install.html)
