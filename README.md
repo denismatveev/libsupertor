@@ -54,7 +54,7 @@ https://curl.haxx.se/docs/install.html
 Download and unpack the curl package.
 
 'cd' to the new directory. (e.g. cd curl-7.12.3)
-Just run script cross-compilation-arm.sh
+Just run script cross-compilation-arm.sh and then run make
 
 Necessary script is available in ````libcurl```` subdirectory.
 
