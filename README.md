@@ -1,4 +1,4 @@
-## How to build static lib ##
+# How to build static lib #
 
 ````bash
 $ make clean;./autogen.sh && ./configure --enable-static-tor --with-libevent-dir=/usr/lib/x86_64-linux-gnu \
