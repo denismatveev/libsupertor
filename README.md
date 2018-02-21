@@ -63,4 +63,4 @@ Necessary script is available in ````libcurl```` subdirectory.
 \# dpkg --add-architecture armhf  
 \# echo 'deb http://mirror.vorboss.net/ubuntu-archive/ xenial main' >> /etc/apt/sources.list  
 \# apt-get update  
-\# apt-get install libssl1.0.0:armhf  
+\# apt-get install libssl-dev:armhf  
