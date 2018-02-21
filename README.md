@@ -21,7 +21,7 @@ If run configure with `--enable-static-tor` six system libs will make as static
 If specify `--enable-static-libm` configure will search math library in system paths, and if addictionally specify `--with-libm-dir=PATH` configure script will search lib in PATH
 If specify `--enable-static-tor` you should also specify paths to libs libevent,libm,libz,openssl,libpthread,libdl using string like
 --with-libpthread-dir=PATH to search static library. An example see above.
-## How to compile libcurl ##
+# How to compile libcurl #
 
 Due to system installed package with libcurl depend on some another libs you need download sources and compile it before compilinig libsupertor.
 Download sources you can here: https://curl.haxx.se/download.html
@@ -31,7 +31,7 @@ $ ./configure --disable-rt --disable-ftp --disable-ldap --disable-ldaps --disabl
 			  --disable-gopher --disable-sspi --disable-ntlm-wb --disable-tls-srp --without-zlib --disable-threaded-resolver \
 			  --disable-file
 ````
-## How to build shared lib ##
+# How to build shared lib #
 
 ````bash
 $ ./autogen.sh && ./configure --enable-shared-libs && make -j4
@@ -47,8 +47,8 @@ $ gcc -g main.c -lsupertor -L. -I../mytor/src/proxytor -L../curl-7.58.0/lib/.lib
 Also you need custom build of openssl, see above.
 To run the app specify export LD_LIBRARY_PATH=`` `pwd` ``
 
-## How to cross-compile ##
-# curl cross-compile #
+# How to cross-compile #
+## curl cross-compile ##
 https://curl.haxx.se/docs/install.html
 
 Download and unpack the curl package.
