@@ -50,3 +50,32 @@ To run the app specify export LD_LIBRARY_PATH=`` `pwd` ``
 ## How to cross-compile ##
 # curl cross-compile #
 https://curl.haxx.se/docs/install.html
+
+Download and unpack the curl package.
+
+'cd' to the new directory. (e.g. cd curl-7.12.3)
+
+Set environment variables to point to the cross-compile toolchain and call configure with any options you need. Be sure and specify the --host and --build parameters at configuration time. The following script is an example of cross-compiling for the IBM 405GP PowerPC processor using the toolchain from MonteVista for Hardhat Linux.
+````bash
+#! /bin/sh
+export PATH=$PATH:/opt/hardhat/devkit/ppc/405/bin
+export CPPFLAGS="-I/opt/hardhat/devkit/ppc/405/target/usr/include"
+export AR=ppc_405-ar
+export AS=ppc_405-as
+export LD=ppc_405-ld
+export RANLIB=ppc_405-ranlib
+export CC=ppc_405-gcc
+export NM=ppc_405-nm
+./configure --target=powerpc-hardhat-linux
+    --host=powerpc-hardhat-linux
+    --build=i586-pc-linux-gnu
+    --prefix=/opt/hardhat/devkit/ppc/405/target/usr/local
+    --exec-prefix=/usr/local
+````
+You may also need to provide a parameter like --with-random=/dev/urandom to configure as it cannot detect the presence of a random number generating device for a target system. The --prefix parameter specifies where curl will be installed. If configure completes successfully, do make and make install as usual.
+
+In some cases, you may be able to simplify the above commands to as little as:
+
+````bash
+./configure --host=ARCH-OS
+````
