@@ -61,11 +61,11 @@ Necessary script is available in ````libcurl```` subdirectory.
 # How to get official armhf packages #
 ````bash
 
-\# mkdir cross-libs;cd cross-libs
-\# dpkg --add-architecture armhf  
-\# echo 'deb http://mirror.vorboss.net/ubuntu-archive/ xenial main' >> /etc/apt/sources.list  
-\# apt-get update  
-\# apt-get download libssl-dev:armhf libssl:armhf zlib1g:armhf zlib1g-dev:armhf
+# mkdir cross-libs;cd cross-libs
+# dpkg --add-architecture armhf  
+# echo 'deb http://mirror.vorboss.net/ubuntu-archive/ xenial main' >> /etc/apt/sources.list  
+# apt-get update  
+# apt-get download libssl-dev:armhf libssl:armhf zlib1g:armhf zlib1g-dev:armhf
 ````
 
 ## Install cross compile toolchain ##
