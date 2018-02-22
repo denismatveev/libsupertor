@@ -60,12 +60,14 @@ Necessary script is available in ````libcurl```` subdirectory.
 
 # How to get official armhf packages #
 ````bash
-# mkdir cross-libs;cd cross-libs
+# mkdir libs-cross-compilation;cd libs-cross-compilation
 # dpkg --add-architecture armhf  
 # echo 'deb http://mirror.vorboss.net/ubuntu-archive/ xenial main' >> /etc/apt/sources.list  
 # apt-get update  
-# apt-get download libssl-dev:armhf libssl:armhf zlib1g:armhf zlib1g-dev:armhf
+# apt-get download libssl-dev:armhf libssl:armhf zlib1g:armhf zlib1g-dev:armhf libevent-2.0-5:armhf libevent-dev:armhf
 ````
+unpack deb archives and take 'so' and 'a' files, also extract include subdirs from openssl-dev, libevent-dev packages
+
 
 ## Install cross compile toolchain ##
 You need to install compiler and minimun libs
@@ -74,4 +76,4 @@ You need to install compiler and minimun libs
 $ sudo apt-get install gcc-arm-linux-gnueabihf
 $ sudo apt-get install binutils-arm-linux-gnueabihf
 ````
-
+run script ./cross-compile-arm-static.sh to configure project
