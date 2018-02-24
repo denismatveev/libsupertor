@@ -163,6 +163,7 @@ fi
 AC_SUBST(TOR_SYSTEMD_CFLAGS)
 AC_SUBST(TOR_SYSTEMD_LIBS)
 
+AM_CONDITIONAL(ARM, test "x$CC" = "xarm-linux-gnueabihf-gcc" || test "x$CC" = "xarm-linux-gnueabi-gcc")
 if test "x$enable_systemd" = "xyes" -a "x$have_systemd" != "xyes" ; then
     AC_MSG_ERROR([Explicitly requested systemd support, but systemd not found])
 fi
@@ -816,6 +817,36 @@ TOR_LIB_DL="$withval/libdl.a"
 AC_SUBST(TOR_LIB_DL)
 
 
+dnl ------------------------------------------------------
+dnl Where do you live,librt?
+
+AC_ARG_WITH(librt-dir,
+        AS_HELP_STRING(--with-librt-dir=PATH),
+  [
+      if test "x$withval" != "xno" && test "x$withval" != "x"; then
+         ALT_dl_WITHVAL="$withval"
+      fi
+  ],
+[
+])
+TOR_LIB_RT="$withval/librt.a"
+AC_SUBST(TOR_LIB_RT)
+
+
+dnl ------------------------------------------------------
+dnl Where do you live,libc?
+
+AC_ARG_WITH(libc-dir,
+        AS_HELP_STRING(--with-libc-dir=PATH),
+  [
+      if test "x$withval" != "xno" && test "x$withval" != "x"; then
+         ALT_dl_WITHVAL="$withval"
+      fi
+  ],
+[
+])
+TOR_LIB_C="$withval/libc.a"
+AC_SUBST(TOR_LIB_C)
 
 
 dnl------------------------------------------------------

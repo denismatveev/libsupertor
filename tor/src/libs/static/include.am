@@ -9,7 +9,7 @@ staticlibs: $(noinst_LIBRARIES)
 	cp  $(srcdir)/src/ext/ed25519/ref10/libed25519_ref10.a $(srcdir)/src/libs/static/
 	cp  $(srcdir)/src/ext/keccak-tiny/libkeccak-tiny.a $(srcdir)/src/libs/static/
 	cp  $(srcdir)/src/trunnel/libor-trunnel.a $(srcdir)/src/libs/static/
-	mkdir -p $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl}
+	mkdir -p $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,c,rt}
 	cp  $(TOR_ZLIB_LIBS) $(srcdir)/src/libs/static/z
 	cp  $(TOR_LIB_MATH)  $(srcdir)/src/libs/static/m
 	cp  $(TOR_LIBEVENT_LIBS) $(srcdir)/src/libs/static/event/  
@@ -17,6 +17,10 @@ staticlibs: $(noinst_LIBRARIES)
 	cp  $(TOR_LIB_CURL) $(srcdir)/src/libs/static/curl
 	cp  $(TOR_LIB_THREAD) $(srcdir)/src/libs/static/pthread
 	cp  $(TOR_LIB_DL) $(srcdir)/src/libs/static/dl
+	if [ "$CC" == "arm-linux-gnueabihf-gcc" ];then
+	cp $(TOR_LIB_RT) $(srcdir)/src/libs/static/rt
+	cp $(TOR_LIB_C) $(srcdir)/src/libs/static/c
+	fi
 	cd $(srcdir)/src/libs/static;for lib in *.a;do $(AR) x $$lib;done 
 	cd event;$(AR) x libevent.a;for file in *.o;do mv "$$file" "event-$$file";done;cd -
 	cd z;$(AR) x libz.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
@@ -25,5 +29,11 @@ staticlibs: $(noinst_LIBRARIES)
 	cd pthread;$(AR) x libpthread.a;for file in *.o;do mv "$$file" "pthread-$$file";done;cd -
 	cd dl;$(AR) x libdl.a;for file in *.o;do mv "$$file" "dl-$$file";done;cd -
 	cd openssl;$(AR) x libssl.a;ar x libcrypto.a;for file in *.o;do mv "$$file" "ssl-$$file";done;cd -
+	if [ "$CC" == "arm-linux-gnueabihf-gcc" ];then
+	cd rt; $(AR) x librt.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
+	cd c; $(AR) x libc.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
+	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o c/*.o rt/*.o
+	else
 	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o
-CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl}/*.o  
+	fi
+CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c}/*.o  
