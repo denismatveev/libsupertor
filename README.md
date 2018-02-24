@@ -76,4 +76,23 @@ You need to install compiler and minimun libs
 $ sudo apt-get install gcc-arm-linux-gnueabihf
 $ sudo apt-get install binutils-arm-linux-gnueabihf
 ````
-run script ./cross-compile-arm-static.sh to configure project
+run script ./cross-compile-arm-static.sh to configure project or ./cross-compile-arm-shared.sh
+Further 
+````bash
+$ make -j4; make sharedlibs
+````
+# How to Link your app #
+
+with static lib:
+````bash
+$ arm-linux-gnueabihf-gcc  -static main.c -L. -lsupertor -I../../mytor/src/proxytor -I../../mytor/src/or/ -I../../curl-arm/include/  -o app
+
+````
+
+with shared lib:
+````bash
+$ arm-linux-gnueabihf-gcc main.c -L. -lsupertor -I../../mytor/src/proxytor -I../../mytor/src/or/ -I../../curl-arm/include/ -L../../curl-arm/lib/.libs -L../../libs-cross-compilation/  -lssl -lcrypto -lpthread -lz -lm -ldl -levent -lcurl  -o app-shared
+
+````
+
+
