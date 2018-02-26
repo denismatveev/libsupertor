@@ -95,4 +95,11 @@ $ arm-linux-gnueabihf-gcc main.c -L. -lsupertor -I../../mytor/src/proxytor -I../
 
 ````
 
+## How to run qemu virt emulator with ARM architecture ##
 
+Download an image, for instance, from https://people.debian.org/~aurel32/qemu/
+
+````bash
+sudo qemu-system-arm -nographic -serial mon:stdio -append 'console=ttyS0' -M vexpress-a9 -kernel vmlinuz-3.2.0-4-vexpress -initrd initrd.img-3.2.0-4-vexpress -drive if=sd,file=debian_wheezy_armhf_standard.qcow2 -append "root=/dev/mmcblk0p2" -net nic,vlan=0 -net tap,vlan=0,ifname=tap0
+````
+Set up network and bring tap interface into bridge on your host PC. 
