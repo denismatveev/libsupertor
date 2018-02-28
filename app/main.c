@@ -4,15 +4,19 @@
 #include <unistd.h>
 int main(int argc, char ** argv)
 {
-char* help_string="How to use:\n"
+    char *reqtype, *url;
+    char* help_string="How to use:\n"
                   "app [get|post] [url] [data to post]\n";
 if(argc < 3)
 {
     fprintf(stderr,"%s", help_string);
     exit(1);
 }
-char* reqtype = argv[1];//get or post
-char * url = argv[2];
+else
+{
+    reqtype = argv[1];//get or post
+    url = argv[2];
+}
 int check_url(char* url)
 {
 
@@ -26,9 +30,8 @@ int check_url(char* url)
 
 }
 
-if(!(strncasecmp("post", reqtype, 4)))
+if(argc >=4 && (!(strncasecmp("post", reqtype, 4))))
 {
-
     string *s=init_string();
     if(torstart())
         exit(5);
@@ -48,7 +51,7 @@ if(!(strncasecmp("post", reqtype, 4)))
         exit(4);
     destroy_string(s);
 }
-else if(!(strncasecmp("get",reqtype,3)))
+else if(argc >= 3 && (!(strncasecmp("get",reqtype,3))))
 {
 
     if((check_url(url)))
