@@ -105,8 +105,6 @@ int torget(string *res, const char* req)
 {
 CURL *curl = curl_easy_init();
 CURLcode ret;
-int i=0;
-
 
 if(curl)
  {
@@ -130,6 +128,7 @@ if(curl)
      return ret;
  do
  {
+  sleep(1);
   ret = curl_easy_perform(curl);
  }
  while(ret != 0);
@@ -166,8 +165,13 @@ int torpost(string *repl, const char* url, const char *post)
          return ret;
     if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)repl)))
           return ret;
+ if((ret=curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L)))
+     return ret;
+ if((ret=curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L)))
+     return ret;
  do
  {
+   sleep(1);
    ret = curl_easy_perform(curl);
  }
  while(ret != 0);
