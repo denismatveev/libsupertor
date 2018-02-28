@@ -1,6 +1,7 @@
-#! /bin/sh
+#!/bin/sh
 export PATH=$PATH:/usr/arm-linux-gnueabihf/bin/
-export CPPFLAGS="-I/usr/arm-linux-gnueabihf/include/"
+export CPPFLAGS="-I/usr/arm-linux-gnueabihf/include/ -I/home/dmat/projects/libs-cross-compilation/include/openssl"
+export LDFLAGS="-L/home/dmat/projects/libs-cross-compilation/"
 export AR=arm-linux-gnueabihf-ar
 export AS=arm-linux-gnueabihf-as
 export LD=arm-linux-gnueabihf-ld
