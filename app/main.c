@@ -67,9 +67,11 @@ else if(!(strncasecmp("get",reqtype,3)))
         exit(4);
     destroy_string(s);
 }
-
+else
+{
 fprintf(stderr, "You must specify get or post(case insensitive)\n");
 fprintf(stderr, "%s",help_string);
+}
 //if(torstart())
 //    return 1;
 //if(torget(s,"https://66.ru"))
