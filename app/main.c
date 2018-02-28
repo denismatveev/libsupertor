@@ -4,13 +4,15 @@
 #include <unistd.h>
 int main(int argc, char ** argv)
 {
-char* reqtype = argv[1];//get or post
-char * url = argv[2];
 char* help_string="How to use:\n"
                   "app [get|post] [url] [data to post]\n";
 if(argc < 3)
+{
     fprintf(stderr,"%s", help_string);
-
+    exit(1);
+}
+char* reqtype = argv[1];//get or post
+char * url = argv[2];
 int check_url(char* url)
 {
 
