@@ -1,11 +1,13 @@
 #include "proxytor.h"
-#include <pthread.h>
 #include "tor_api.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+#include "torlog.h"
+
+extern pthread_mutex_t mutex; 
+extern pthread_cond_t cond;
+
 static pthread_t tid;
 static tor_main_configuration_t *cfg;
 void* tor_thread_start(void* arg)
@@ -25,7 +27,10 @@ int torstart(void)
         return rc;
     if((rc=pthread_create(&tid, &attr, tor_thread_start, NULL)))
          return rc;
-
+/* block main thread to wait while application connecting to TOR network */
+    pthread_mutex_lock(&mutex);
+    pthread_cond_wait(&cond, &mutex);
+    pthread_mutex_unlock(&mutex);
 
     return 0;
 
@@ -36,7 +41,8 @@ int torstop(void)
     int rc;
     if((rc=pthread_cancel(tid)))
         return rc;
-
+    pthread_cond_destroy(&cond);
+    pthread_mutex_destroy(&mutex);
     return 0;
 }
 
@@ -47,8 +53,7 @@ string* init_string(void)
   string *s;
   if((s = (string*)malloc(sizeof(string))) == NULL)
   {
-      fprintf(stderr, "malloc failed\n");
-      return NULL;
+     return NULL;
   }
 
 
@@ -56,7 +61,6 @@ string* init_string(void)
   s->len = 0;
   if (s->ptr == NULL)
   {
-    fprintf(stderr, "malloc() failed\n");
     return NULL;
   }
 
@@ -88,7 +92,6 @@ size_t writefunc(char *ptr, size_t size, size_t nmemb, void *st)
   if(newptr == NULL) 
   {
     /* out of memory! */
-    printf("not enough memory (realloc returned NULL)\n");
     return 0;
   }
   s->ptr=newptr;
@@ -105,7 +108,6 @@ int torget(string *res, const char* req)
 {
 CURL *curl = curl_easy_init();
 CURLcode ret;
-
 if(curl)
  {
  
@@ -126,12 +128,8 @@ if(curl)
      return ret;
  if((ret=curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L)))
      return ret;
- do
- {
-  sleep(1);
-  ret = curl_easy_perform(curl);
- }
- while(ret != 0);
+ if((ret = curl_easy_perform(curl)))
+     return ret;
 
  curl_easy_cleanup(curl);
 }
@@ -150,7 +148,6 @@ int torpost(string *repl, const char* url, const char *post)
 {
   CURL *curl;
   CURLcode ret;
-
  
   curl = curl_easy_init();
   if(curl) 
@@ -169,12 +166,8 @@ int torpost(string *repl, const char* url, const char *post)
      return ret;
  if((ret=curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L)))
      return ret;
- do
- {
-   sleep(1);
-   ret = curl_easy_perform(curl);
- }
- while(ret != 0);
+ if((ret = curl_easy_perform(curl)))
+     return ret;
 
  curl_easy_cleanup(curl);
   }

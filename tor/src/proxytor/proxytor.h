@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include<string.h>
 #include <curl/curl.h>
-
+#include <pthread.h>
 
 typedef struct _string {
   char *ptr;
