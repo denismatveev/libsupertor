@@ -13,7 +13,7 @@ static tor_main_configuration_t *cfg;
 void* tor_thread_start(void* arg)
 {
     char *options[]={"tor", "--quiet"};
-    tor_main(1, options);
+    tor_main(2, options);
     return NULL;
 
 }
