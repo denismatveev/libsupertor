@@ -10,6 +10,7 @@ typedef struct _string {
   char *ptr;
   size_t len;
 } string ;
+
 string* init_string(void);
 void destroy_string(string*);
 size_t writefunc(char*, size_t, size_t, void*);
