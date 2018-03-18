@@ -60,11 +60,11 @@ Necessary script is available in ````libcurl```` subdirectory.
 
 # How to get official armhf packages #
 ````bash
-\# mkdir libs-cross-compilation;cd libs-cross-compilation
-\# dpkg --add-architecture armhf  
-\# echo 'deb http://mirror.vorboss.net/ubuntu-archive/ xenial main' >> /etc/apt/sources.list  
-\# apt-get update  
-\# apt-get download libssl-dev:armhf libssl:armhf zlib1g:armhf zlib1g-dev:armhf libevent-2.0-5:armhf libevent-dev:armhf
+# mkdir libs-cross-compilation;cd libs-cross-compilation
+# dpkg --add-architecture armhf  
+# echo 'deb http://mirror.vorboss.net/ubuntu-archive/ xenial main' >> /etc/apt/sources.list  
+# apt-get update  
+# apt-get download libssl-dev:armhf libssl:armhf zlib1g:armhf zlib1g-dev:armhf libevent-2.0-5:armhf libevent-dev:armhf
 ````
 unpack deb archives and take 'so' and 'a' files, also extract include subdirs from openssl-dev, libevent-dev packages
 
@@ -105,9 +105,9 @@ sudo qemu-system-arm -nographic -serial mon:stdio -append 'console=ttyS0' -M vex
 Set up network and bring tap interface into bridge on your host PC. 
 ## Cross compilation tor for Windows under Linux ##
 ````bash
-\# echo 'deb http://mirror.yandex.ru/debian stretch main contrib non-free' >> /etc/apt/sources.list
-\# apt-get install gcc-mingw-w64-i686
-\# apt-get install autoconf automake libtool
-\# apt-get install libz-mingw-w64 libz-mingw-w64-dev
-\# cd windows; make
+# echo 'deb http://mirror.yandex.ru/debian stretch main contrib non-free' >> /etc/apt/sources.list
+# apt-get install gcc-mingw-w64-i686
+# apt-get install autoconf automake libtool
+# apt-get install libz-mingw-w64 libz-mingw-w64-dev
+# cd windows; make
 ````
