@@ -350,45 +350,6 @@ circuit_log_path(int severity, unsigned int domain, origin_circuit_t *circ)
   tor_free(s);
 }
 
-/** Tell the rep(utation)hist(ory) module about the status of the links
- * in <b>circ</b>.  Hops that have become OPEN are marked as successfully
- * extended; the _first_ hop that isn't open (if any) is marked as
- * unable to extend.
- */
-/* XXXX Someday we should learn from OR circuits too. */
-void
-circuit_rep_hist_note_result(origin_circuit_t *circ)
-{
-  crypt_path_t *hop;
-  const char *prev_digest = NULL;
-  hop = circ->cpath;
-  if (!hop) /* circuit hasn't started building yet. */
-    return;
-  if (server_mode(get_options())) {
-    const routerinfo_t *me = router_get_my_routerinfo();
-    if (!me)
-      return;
-    prev_digest = me->cache_info.identity_digest;
-  }
-  do {
-    const node_t *node = node_get_by_id(hop->extend_info->identity_digest);
-    if (node) { /* Why do we check this?  We know the identity. -NM XXXX */
-      if (prev_digest) {
-        if (hop->state == CPATH_STATE_OPEN)
-          rep_hist_note_extend_succeeded(prev_digest, node->identity);
-        else {
-          rep_hist_note_extend_failed(prev_digest, node->identity);
-          break;
-        }
-      }
-      prev_digest = node->identity;
-    } else {
-      prev_digest = NULL;
-    }
-    hop=hop->next;
-  } while (hop!=circ->cpath);
-}
-
 /** Return 1 iff every node in circ's cpath definitely supports ntor. */
 static int
 circuit_cpath_supports_ntor(const origin_circuit_t *circ)
@@ -1078,7 +1039,6 @@ circuit_build_no_more_hops(origin_circuit_t *circ)
   }
 
   pathbias_count_build_success(circ);
-  circuit_rep_hist_note_result(circ);
   if (is_usable_for_streams)
     circuit_has_opened(circ); /* do other actions as necessary */
 
@@ -1089,9 +1049,9 @@ circuit_build_no_more_hops(origin_circuit_t *circ)
     log_notice(LD_GENERAL,
                "Tor has successfully opened a circuit. "
                "Looks like client functionality is working.");
-      pthread_mutex_lock(&mutex);
-      pthread_cond_signal(&cond);
-      pthread_mutex_unlock(&mutex);
+     pthread_mutex_lock(&mutex);
+     pthread_cond_signal(&cond);
+     pthread_mutex_unlock(&mutex);
     if (control_event_bootstrap(BOOTSTRAP_STATUS_DONE, 0) == 0) {
       log_notice(LD_GENERAL,
                  "Tor has successfully opened a circuit. "
@@ -1101,7 +1061,7 @@ circuit_build_no_more_hops(origin_circuit_t *circ)
     clear_broken_connection_map(1);
     if (server_mode(options) && !check_whether_orport_reachable(options)) {
       inform_testing_reachability();
-      consider_testing_reachability(1, 1);
+      router_do_reachability_checks(1, 1);
     }
   }
 
@@ -1657,7 +1617,7 @@ onionskin_answer(or_circuit_t *circ,
  *     rend_service_launch_establish_intro())
  *
  *   - We are a router testing its own reachabiity
- *     (CIRCUIT_PURPOSE_TESTING, via consider_testing_reachability())
+ *     (CIRCUIT_PURPOSE_TESTING, via router_do_reachability_checks())
  *
  * onion_pick_cpath_exit() bypasses us (by not calling
  * new_route_len()) in the one-hop tunnel case, so we don't need to
@@ -2229,7 +2189,7 @@ pick_restricted_middle_node(router_crn_flags_t flags,
    * Max number of restricted nodes before we alert the user and try
    * to load balance for them.
    *
-   * The most agressive vanguard design had 16 nodes at layer3.
+   * The most aggressive vanguard design had 16 nodes at layer3.
    * Let's give a small ceiling above that. */
 #define MAX_SANE_RESTRICTED_NODES 20
   /* If the user (or associated tor controller) selected only a few nodes,
@@ -2912,8 +2872,10 @@ extend_info_from_node(const node_t *node, int for_direct_connect)
     valid_addr = fascist_firewall_choose_address_node(node,
                                                       FIREWALL_OR_CONNECTION,
                                                       0, &ap);
-  else
-    valid_addr = !node_get_prim_orport(node, &ap);
+  else {
+    node_get_prim_orport(node, &ap);
+    valid_addr = tor_addr_port_is_valid_ap(&ap, 0);
+  }
 
   if (valid_addr)
     log_debug(LD_CIRC, "using %s for %s",
