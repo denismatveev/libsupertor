@@ -10,6 +10,11 @@ sharedlibs: $(noinst_LIBRARIES)
 	cp  $(srcdir)/src/ext/keccak-tiny/libkeccak-tiny.a $(srcdir)/src/libs/shared/
 	cp  $(srcdir)/src/trunnel/libor-trunnel.a $(srcdir)/src/libs/shared/
 	cd $(srcdir)/src/libs/shared;for lib in *.a;do $(AR) x $$lib;done;cd -
-	cd $(srcdir)/src/libs/shared;$(CC) -fPIC -shared -o libsupertor.so *.o 
+	cd $(srcdir)/src/libs/shared;
+	if [ "${WIN}" == "1" ];then
+	$(CC) -fPIC -shared -o libsupertor.dll *.o -L/usr/i686-w64-mingw32/lib/ -L${PREFIX_DIR}/lib -l:libssl.dll.a -l:libevent.dll.a -l:libcrypto.dll.a -l:libz.dll.a -l:libpthread.dll.a -l:libcurl.dll.a -lws2_32
+	else
+	$(CC) -fPIC -shared -o libsupertor.so *.o
+	fi
 
 CLEANFILES +=$(srcdir)/src/libs/shared/*.so $(srcdir)/src/libs/shared/*.o  $(srcdir)/src/libs/shared/*.a 
