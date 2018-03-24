@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+char* help_string="How to use:\n"
+	    "app [get|post] [url] [data to post]\n";
 int check_url(char* url)
 {
 
@@ -19,8 +21,6 @@ int check_url(char* url)
 int main(int argc, char ** argv)
 {
   char *reqtype, *url;
-  char* help_string="How to use:\n"
-                    "app [get|post] [url] [data to post]\n";
   if(argc < 3)
   {
     fprintf(stderr,"%s", help_string);
