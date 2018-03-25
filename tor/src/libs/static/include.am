@@ -17,11 +17,11 @@ staticlibs: $(noinst_LIBRARIES)
 	cp  $(TOR_LIB_CURL) $(srcdir)/src/libs/static/curl
 	cp  $(TOR_LIB_THREAD) $(srcdir)/src/libs/static/pthread
 	cp  $(TOR_LIB_DL) $(srcdir)/src/libs/static/dl
-	if [ "$CC" == "arm-linux-gnueabihf-gcc" ];then
+	if [ "$$CC" == "arm-linux-gnueabihf-gcc" ];then
 	cp $(TOR_LIB_RT) $(srcdir)/src/libs/static/rt
 	cp $(TOR_LIB_C) $(srcdir)/src/libs/static/c
 	fi
-	if [ "$WIN" == "1" ];then 
+	if [ "$$WIN" == "1" ];then 
 	mkdir -p $(srcdir)/src/libs/static/{ssp,ws2_32}
 	cp /usr/$(HOST)/lib/libws2_32.a $(srcdir)/src/libs/static/ws2_32
 	cp /usr/lib/gcc/$(HOST)/6.3-posix/libssp.a $(srcdir)/src/libs/static/ssp 
@@ -34,11 +34,11 @@ staticlibs: $(noinst_LIBRARIES)
 	cd pthread;$(AR) x libpthread.a;for file in *.o;do mv "$$file" "pthread-$$file";done;cd -
 	cd dl;$(AR) x libdl.a;for file in *.o;do mv "$$file" "dl-$$file";done;cd -
 	cd openssl;$(AR) x libssl.a;ar x libcrypto.a;for file in *.o;do mv "$$file" "ssl-$$file";done;cd -
-	if [ "$CC" == "arm-linux-gnueabihf-gcc" ];then
+	if [ "$$CC" == "arm-linux-gnueabihf-gcc" ];then
 	cd rt; $(AR) x librt.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
 	cd c; $(AR) x libc.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
 	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o c/*.o rt/*.o
-	elif [ "$WIN" == "1" ];then 
+	elif [ "$$WIN" == "1" ];then 
 	cd ws2_32;$(AR) x libws2_32.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
 	cd ssp; $(AR) x libssp.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
 	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o ssp/*.o ws2_32/*.o
