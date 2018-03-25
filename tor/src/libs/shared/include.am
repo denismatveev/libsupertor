@@ -12,7 +12,7 @@ sharedlibs: $(noinst_LIBRARIES)
 	cd $(srcdir)/src/libs/shared;for lib in *.a;do $(AR) x $$lib;done;cd -
 	cd $(srcdir)/src/libs/shared;
 	if [ "${WIN}" == "1" ];then
-	$(CC) -no-undefined -enable-runtime-pseudo-reloc -static-libgcc -static-libstdc++ -fPIC -shared -o libsupertor.dll *.o -L/usr/${HOST}/lib/ -L${PREFIX_DIR}/lib -l:libssl.dll.a -l:libevent.dll.a -l:libcrypto.dll.a -l:libz.dll.a -l:libpthread.dll.a -l:libcurl.dll.a -lws2_32 -lssp
+	$(CC) -static-libgcc -static-libstdc++ -fPIC -shared -o libsupertor.dll *.o -L/usr/${HOST}/lib/ -L${PREFIX_DIR}/lib -l:libssl.dll.a -l:libevent.dll.a -l:libcrypto.dll.a -l:libz.dll.a -l:libpthread.dll.a -l:libcurl.dll.a -lws2_32 -lssp
 	else
 	$(CC) -fPIC -shared -o libsupertor.so *.o
 	fi
