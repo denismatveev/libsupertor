@@ -17,10 +17,8 @@ staticlibs: $(noinst_LIBRARIES)
 	cp  $(TOR_LIB_CURL) $(srcdir)/src/libs/static/curl
 	cp  $(TOR_LIB_THREAD) $(srcdir)/src/libs/static/pthread
 	cp  $(TOR_LIB_DL) $(srcdir)/src/libs/static/dl
-	if [ "$$CC" == "arm-linux-gnueabihf-gcc" ];then
 	cp $(TOR_LIB_RT) $(srcdir)/src/libs/static/rt
 	cp $(TOR_LIB_C) $(srcdir)/src/libs/static/c
-	fi
 	if [ "$$WIN" == "1" ];then 
 	mkdir -p $(srcdir)/src/libs/static/{ssp,ws2_32}
 	cp /usr/$(HOST)/lib/libws2_32.a $(srcdir)/src/libs/static/ws2_32
@@ -28,21 +26,19 @@ staticlibs: $(noinst_LIBRARIES)
 	fi
 	cd $(srcdir)/src/libs/static;for lib in *.a;do $(AR) x $$lib;done 
 	cd event;$(AR) x libevent.a;for file in *.o;do mv "$$file" "event-$$file";done;cd -
-	cd z;$(AR) x libz.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
-	cd m;$(AR) x libm.a;for file in *.o;do mv "$$file" "z-$$file";done;cd -
+	cd z;$(AR) x libz.a;for file in *.o;do mv "$$file" "z-$$file";done;cd -
+	cd m;$(AR) x libm.a;for file in *.o;do mv "$$file" "m-$$file";done;cd -
 	cd curl;$(AR) x libcurl.a;for file in *.o;do mv "$$file" "curl-$$file";done;cd -
 	cd pthread;$(AR) x libpthread.a;for file in *.o;do mv "$$file" "pthread-$$file";done;cd -
 	cd dl;$(AR) x libdl.a;for file in *.o;do mv "$$file" "dl-$$file";done;cd -
 	cd openssl;$(AR) x libssl.a;ar x libcrypto.a;for file in *.o;do mv "$$file" "ssl-$$file";done;cd -
-	if [ "$$CC" == "arm-linux-gnueabihf-gcc" ];then
-	cd rt; $(AR) x librt.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
-	cd c; $(AR) x libc.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
-	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o c/*.o rt/*.o
-	elif [ "$$WIN" == "1" ];then 
-	cd ws2_32;$(AR) x libws2_32.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
-	cd ssp; $(AR) x libssp.a;for file in *.o;do mv "$$file" "x-$$file";done;cd -
-	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o ssp/*.o ws2_32/*.o
+	if [ "$$WIN" == "1" ];then 
+	cd rt; $(AR) x librt.a;for file in *.o;do mv "$$file" "rt-$$file";done;cd -
+	cd c; $(AR) x libc.a;for file in *.o;do mv "$$file" "c-$$file";done;cd -
+	cd ws2_32;$(AR) x libws2_32.a;for file in *.o;do mv "$$file" "ws2_32-$$file";done;cd -
+	cd ssp; $(AR) x libssp.a;for file in *.o;do mv "$$file" "ssp-$$file";done;cd -
+	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o ssp/*.o ws2_32/*.o c/*.o rt/*.o
 	else
-	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o
+	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o c/*.o rt/*.o
 	fi
 CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c,ssp,ws2_32}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c,ssp,ws2_32}/*.o  
