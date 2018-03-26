@@ -32,13 +32,15 @@ staticlibs: $(noinst_LIBRARIES)
 	cd pthread;$(AR) x libpthread.a;for file in *.o;do mv "$$file" "pthread-$$file";done;cd -
 	cd dl;$(AR) x libdl.a;for file in *.o;do mv "$$file" "dl-$$file";done;cd -
 	cd openssl;$(AR) x libssl.a;ar x libcrypto.a;for file in *.o;do mv "$$file" "ssl-$$file";done;cd -
-	if [ "$$WIN" == "1" ];then 
+	if [ "$$CC" == "arm-linux-gnueabihf-gcc" ];then
 	cd rt; $(AR) x librt.a;for file in *.o;do mv "$$file" "rt-$$file";done;cd -
 	cd c; $(AR) x libc.a;for file in *.o;do mv "$$file" "c-$$file";done;cd -
+	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o c/*.o rt/*.o
+	elif [ "$$WIN" == "1" ];then 
 	cd ws2_32;$(AR) x libws2_32.a;for file in *.o;do mv "$$file" "ws2_32-$$file";done;cd -
 	cd ssp; $(AR) x libssp.a;for file in *.o;do mv "$$file" "ssp-$$file";done;cd -
-	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o ssp/*.o ws2_32/*.o c/*.o rt/*.o
+	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o ssp/*.o ws2_32/*.o
 	else
-	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o c/*.o rt/*.o
+	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o
 	fi
 CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c,ssp,ws2_32}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c,ssp,ws2_32}/*.o  
