@@ -28,8 +28,8 @@ staticlibs: $(noinst_LIBRARIES)
 	cd event;$(AR) x libevent.a;for file in *.o;do mv "$$file" "event-$$file";done;cd -
 	cd z;$(AR) x libz.a;for file in *.o;do mv "$$file" "z-$$file";done;cd -
 	cd m;$(AR) x libm.a;for file in *.o;do mv "$$file" "m-$$file";done;cd -
-	cd curl;$(AR) x libcurl.a;for file in *.o;do mv "$$file" "curl-$$file";done;cd -
-	cd pthread;$(AR) x libpthread.a;for file in *.o;do mv "$$file" "pthread-$$file";done;cd -
+	cd curl;$(AR) x libcurl.a;cd -
+	cd pthread;$(AR) x libpthread.a;cd -
 	cd dl;$(AR) x libdl.a;for file in *.o;do mv "$$file" "dl-$$file";done;cd -
 	cd openssl;$(AR) x libssl.a;ar x libcrypto.a;for file in *.o;do mv "$$file" "ssl-$$file";done;cd -
 	if [ "$$CC" == "arm-linux-gnueabihf-gcc" ];then
