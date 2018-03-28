@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "torlog.h"
 
 extern pthread_mutex_t mutex; 
 extern pthread_cond_t cond;
