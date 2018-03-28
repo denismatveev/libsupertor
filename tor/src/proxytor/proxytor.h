@@ -2,6 +2,7 @@
 #define MYAPP_H
 #include "tor_api.h"
 #include <stdlib.h>
+#define CURL_STATICLIB
 #include<string.h>
 #include <curl/curl.h>
 #include <pthread.h>
