@@ -20,11 +20,12 @@ staticlibs: $(noinst_LIBRARIES)
 	cp $(TOR_LIB_RT) $(srcdir)/src/libs/static/rt
 	cp $(TOR_LIB_C) $(srcdir)/src/libs/static/c
 	if [ "$$WIN" == "1" ];then 
-	mkdir -p $(srcdir)/src/libs/static/{ssp,ws2_32,gdi32,crypt32}
+	mkdir -p $(srcdir)/src/libs/static/{ssp,ws2_32,gdi32,crypt32,gcc}
 	cp /usr/$(HOST)/lib/libws2_32.a $(srcdir)/src/libs/static/ws2_32
 	cp /usr/lib/gcc/$(HOST)/6.3-posix/libssp.a $(srcdir)/src/libs/static/ssp 
 	cp /usr/$(HOST)/lib/libgdi32.a $(srcdir)/src/libs/static/gdi32
 	cp /usr/$(HOST)/lib/libcrypt32.a $(srcdir)/src/libs/static/crypt32
+	cp /usr/lib/gcc/$(HOST)/6.3-win32/libgcc.a $(srcdir)/src/libs/static/gcc
 	fi
 	cd $(srcdir)/src/libs/static;for lib in *.a;do $(AR) x $$lib;done 
 	cd event;$(AR) x libevent.a;for file in *.o;do mv "$$file" "event-$$file";done;cd -
@@ -43,8 +44,9 @@ staticlibs: $(noinst_LIBRARIES)
 	cd ssp; $(AR) x libssp.a;for file in *.o;do mv "$$file" "ssp-$$file";done;cd -
 	cd gdi32; $(AR) x libgdi32.a;for file in *.o;do mv "$$file" "gdi-$$file";done;cd -
 	cd crypt32; $(AR) x libcrypt32.a;for file in *.o;do mv "$$file" "crypt32-$$file";done;cd -
-	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o ssp/*.o ws2_32/*.o gdi32/*.o crypt32/*.o
+	cd gcc; $(AR) x libgcc.a;for file in *.o;do mv "$$file" "gcc-$$file";done;cd -
+	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o ssp/*.o ws2_32/*.o gdi32/*.o crypt32/*.o gcc/*.o
 	else
 	$(AR) rcs libsupertor.a *.o event/*.o z/*.o m/*.o openssl/*.o curl/*.o pthread/*.o dl/*.o
 	fi
-CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c,ssp,ws2_32,gdi32,crypt32}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c,ssp,ws2_32,gdi32,crypt32}/*.o  
+CLEANFILES +=$(srcdir)/src/libs/static/*.a $(srcdir)/src/libs/static/*.o $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c,ssp,ws2_32,gdi32,crypt32,gcc}/*.a $(srcdir)/src/libs/static/{event,z,m,openssl,curl,pthread,dl,rt,c,ssp,ws2_32,gdi32,crypt32,gcc}/*.o  
