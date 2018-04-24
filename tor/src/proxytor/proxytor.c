@@ -112,27 +112,54 @@ int torget(string *res, const char* req)
   if(curl)
   {
     if((ret = curl_easy_setopt(curl, CURLOPT_URL, req)))
+    {  
+      curl_easy_cleanup(curl);
       return ret;
-
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_PROXY, "socks5h://127.0.0.1:9050")))
+    {  
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_USERAGENT, "libsupertor/1.0")))
       return ret;
+    {  
+      curl_easy_cleanup(curl);
+      return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc)))
+    {  
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)res)))
+    {  
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20L)))
+    {  
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L)))
+    {  
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L)))
+    {  
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret = curl_easy_perform(curl)))
+    {  
+      curl_easy_cleanup(curl);
       return ret;
+    }
 
-    curl_easy_cleanup(curl);
   }
+    curl_easy_cleanup(curl);
   return 0;
 }
 
@@ -147,23 +174,47 @@ int torpost(string *repl, const char* url, const char *post)
   if(curl)
   {
     if((ret=curl_easy_setopt(curl, CURLOPT_PROXY, "socks5h://127.0.0.1:9050")))
+    {
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((curl_easy_setopt(curl, CURLOPT_URL, url)))
+    {
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post)))
+    {
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc)))
+    {
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)repl)))
+    {
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L)))
+    {
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret=curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L)))
+    {
+      curl_easy_cleanup(curl);
       return ret;
+    }
     if((ret = curl_easy_perform(curl)))
+    {
+      curl_easy_cleanup(curl);
       return ret;
+    }
 
-    curl_easy_cleanup(curl);
   }
-  return 0;
+    curl_easy_cleanup(curl);
+    return 0;
 }
