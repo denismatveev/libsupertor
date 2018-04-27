@@ -122,7 +122,6 @@ int torget(string *res, const char* req)
       return ret;
     }
     if((ret=curl_easy_setopt(curl, CURLOPT_USERAGENT, "libsupertor/1.0")))
-      return ret;
     {  
       curl_easy_cleanup(curl);
       return ret;
