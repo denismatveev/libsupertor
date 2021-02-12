@@ -1,3 +1,9 @@
+# Task
+Create a library based on tor sources for linking to other applications. There must be a possibility to create both static and dynamic library. Moreover, the library must be compiled for ARM(Linux).
+
+Also the library must be compiled under Windows. For starting and stopping tor there must be functions torstart() and torstop(). To perform GET and POST requests there must be functions torget() and torpost().
+
+
 # How to build static lib #
 
 ````bash
